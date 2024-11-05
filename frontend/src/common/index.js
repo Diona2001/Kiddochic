@@ -1,5 +1,5 @@
 
-const backendDomain = "http://localhost:8080";
+const backendDomain = "https://kiddochic-backend.onrender.com";
 
 const SummaryApi = {
   signUp: {
