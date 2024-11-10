@@ -75,6 +75,10 @@ const SummaryApi = {
     url: `${backendDomain}/api/cart/remove/${productId}`, // Corrected path
     method: "DELETE",
   }),
+  updateCartQuantity: (productId) => ({
+    url: `${backendDomain}/api/cart/updateQuantity/${productId}`,
+    method: "PUT",
+  }),
 };
 
 
