@@ -1,34 +1,28 @@
-// src/components/ShoppingCartContext.js
 import React, { createContext, useState } from 'react';
-import SummaryApi from '../common';
-
 
 export const ShoppingCartContext = createContext();
 
 export const ShoppingCartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  // Add to Cart function
-  const addToCart = (product) => {
-    setCartItems((prevItems) => [...prevItems, product]);
-    // const dataResponse = await fetch(SummaryApi.addToCartProduct.url, {
-    //   method: SummaryApi.addToCart.method,
-    //   headers: {
-    //     "content-type": "application/json"
-    //   },
-    //   body: JSON.stringify(product)
-    // });
-
-    // const dataApi = await dataResponse.json();
-
-    alert(`${product.name} has been added to the cart!`);
+  // Function to add an item to the cart and update cartItems state
+  const addToCart = (item) => {
+    setCartItems((prevItems) => {
+      const existingItem = prevItems.find(i => i.productId === item.productId);
+      if (existingItem) {
+        // If item exists, update its quantity
+        return prevItems.map(i =>
+          i.productId === item.productId ? { ...i, quantity: i.quantity + item.quantity } : i
+        );
+      } else {
+        // If item does not exist, add it to the cart
+        return [...prevItems, { ...item, quantity: item.quantity }];
+      }
+    });
   };
 
-  // Buy Now function (you might want to navigate to the checkout page)
-  const buyNow = (product) => {
-    setCartItems([product]); // Add only the current product to the cart
-    alert(`Proceeding to buy ${product.name}`);
-    // Navigate to checkout or process the order directly
+  const buyNow = (item) => {
+    // Implement buyNow function if necessary
   };
 
   return (
