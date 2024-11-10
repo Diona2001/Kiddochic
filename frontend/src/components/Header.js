@@ -1,44 +1,40 @@
 import React, { useContext, useState } from 'react';
-import logoImg from '../assets/logo.svg'; // Ensure the path is correct
+import logoImg from '../assets/logo.svg';
 import { CiSearch } from "react-icons/ci";
 import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context'; // Import AuthContext
-import { ShoppingCartContext } from './ShoppingCartContext'; // Import ShoppingCartContext
+import { AuthContext } from '../context';
+import { ShoppingCartContext } from './ShoppingCartContext';
 
 const Header = () => {
-  const { auth, logout } = useContext(AuthContext); // Consume AuthContext
-  const { cartItems } = useContext(ShoppingCartContext); // Consume ShoppingCartContext
+  const { auth, logout } = useContext(AuthContext);
+  const { cartItems, clearCart } = useContext(ShoppingCartContext); // Use clearCart from ShoppingCartContext
   const navigate = useNavigate();
-  const [showUserInfo, setShowUserInfo] = useState(false); // Add this line
+  const [showUserInfo, setShowUserInfo] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleLogout = () => {
     logout();
+    clearCart();  // Clear the cart items on logout
     navigate('/login');
   };
 
   const handleSearch = (e) => {
-    const { value } = e.target;
-
-    if(value) {
-      navigate(`/search?q=${value}`);
-    } else {
-      navigate("/search");
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      navigate(`/search?q=${searchTerm}`);
     }
   };
 
   const handleCartClick = () => {
-    navigate('/cart'); // Navigate to the cart page
+    navigate('/cart');
   };
 
-  // Calculate the total number of items in the cart
   const cartCount = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
 
   return (
     <header className='h-16 shadow-md bg-white'>
       <div className='h-full container mx-auto flex items-center px-4 justify-between'>
         <div>
-          {/* Wrap the logo image inside a Link component */}
           <Link to="/">
             <img src={logoImg} alt="Logo" width={50} height={45} />
           </Link>
@@ -48,19 +44,22 @@ const Header = () => {
           <input 
             type='text' 
             placeholder='Search product here...' 
-            className='w-full outline-none' onChange={handleSearch}
+            className='w-full outline-none'
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleSearch}
             aria-label='Search products'
           />
           <button 
             className='text-lg min-w-[50px] h-8 bg-red-600 flex items-center justify-center rounded-r-full text-white' 
             aria-label='Search button'
+            onClick={() => searchTerm.trim() && navigate(`/search?q=${searchTerm}`)}
           >
             <CiSearch />
           </button>
         </div>
 
         <div className='flex items-center gap-7'>
-          {auth.user && (
+          {auth.user ? (
             <div 
               className='text-3xl cursor-pointer relative' 
               onMouseEnter={() => setShowUserInfo(true)} 
@@ -75,20 +74,20 @@ const Header = () => {
                 </div>
               )}
             </div>
-          )}
+          ) : null}
 
           <div className='text-2xl relative'>
             <span onClick={handleCartClick} className="cursor-pointer">
               <FaShoppingCart />
             </span>
-            <div className='bg-red-600 text-white w-5 h-5 rounded-full p-1 flex items-center justify-center absolute -top-2 -right-3'>
-              {/* Display cart count */}
-              <p className='text-sm'>{cartCount}</p>
-            </div>
+            {cartCount > 0 && (
+              <div className='bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center absolute -top-2 -right-3'>
+                <p className='text-sm'>{cartCount}</p>
+              </div>
+            )}
           </div>
 
           <div>
-            {/* Show login or logout button based on user state */}
             {auth.user ? (
               <button 
                 onClick={handleLogout} 
