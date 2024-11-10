@@ -1,4 +1,3 @@
-// src/components/Header.js
 import React, { useContext, useState } from 'react';
 import logoImg from '../assets/logo.svg'; // Ensure the path is correct
 import { CiSearch } from "react-icons/ci";
@@ -19,12 +18,12 @@ const Header = () => {
   };
 
   const handleSearch = (e) => {
-    const { value } = e.target
+    const { value } = e.target;
 
-    if(value){
-      navigate(`/search?q=${ value }`)
-    }else{
-      navigate("/search")
+    if(value) {
+      navigate(`/search?q=${value}`);
+    } else {
+      navigate("/search");
     }
   };
 
@@ -75,7 +74,7 @@ const Header = () => {
             </div>
           )}
 
-<div className='text-2xl relative'>
+          <div className='text-2xl relative'>
             <span onClick={handleCartClick} className="cursor-pointer">
               <FaShoppingCart />
             </span>
