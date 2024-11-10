@@ -31,6 +31,9 @@ const Header = () => {
     navigate('/cart'); // Navigate to the cart page
   };
 
+  // Calculate the total number of items in the cart
+  const cartCount = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
+
   return (
     <header className='h-16 shadow-md bg-white'>
       <div className='h-full container mx-auto flex items-center px-4 justify-between'>
@@ -79,8 +82,8 @@ const Header = () => {
               <FaShoppingCart />
             </span>
             <div className='bg-red-600 text-white w-5 h-5 rounded-full p-1 flex items-center justify-center absolute -top-2 -right-3'>
-              {/* Display cart count, defaulting to 0 */}
-              <p className='text-sm'>{cartItems.length}</p>
+              {/* Display cart count */}
+              <p className='text-sm'>{cartCount}</p>
             </div>
           </div>
 
