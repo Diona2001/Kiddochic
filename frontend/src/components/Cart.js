@@ -60,27 +60,27 @@ const Cart = () => {
         toast.error("Please log in to modify your cart.");
         return;
       }
-
-      const { url, method } = SummaryApi.updateCartQuantity;
-      const response = await fetch(`${url}`, {
-        method,
+  
+      const { url, method } = SummaryApi.updateCartQuantity(productId);
+      
+      // Explicitly use the PUT method and add headers and body
+      const response = await fetch(url, {
+        method: "PUT", // Ensure it’s set explicitly here
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ productId, quantity: newQuantity }),
+        body: JSON.stringify({ quantity: newQuantity }), // Body with quantity
       });
-
+  
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to update quantity.");
+        throw new Error("Failed to update quantity.");
       }
-
+  
       const data = await response.json();
-      console.log("Updated Cart Quantity:", data);
-
       if (data.success) {
-        fetchCart();
+        toast.success("Quantity updated.");
+        fetchCart(); // Refresh cart after updating
       } else {
         toast.error(data.message || "Failed to update quantity.");
       }
@@ -89,6 +89,7 @@ const Cart = () => {
       toast.error("Failed to update quantity.");
     }
   };
+  
 
   const handleRemoveItem = async (productId) => {
     try {
