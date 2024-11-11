@@ -11,7 +11,7 @@ const ProductCard = ({ product }) => {
 
   const {
     name,
-    category,
+    // category,
     subcategory,
     description,
     originalPrice,
@@ -76,7 +76,7 @@ const ProductCard = ({ product }) => {
           <span className="text-green-500 font-semibold">₹{discountPrice.toFixed(2)}</span>
         </div>
         <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
-          {category} - {subcategory}
+           {subcategory}
         </span>
       </div>
       <div className="px-6 py-4 flex justify-between items-center">
