@@ -5,7 +5,7 @@ import SummaryApi from '../common';
 const ProductDetails = () => {
     const [data, setData] = useState({
         name: "",
-        category: "",
+        // category: "",
         subcategory: "",
         description: "",
         originalPrice: "",
@@ -102,7 +102,7 @@ const ProductDetails = () => {
                     </div>
                 </div>
                 <div style={{ flex: '1' }}>
-                    <p style={{ fontSize: '18px', fontWeight: '600', marginBottom: '10px' }}>Category: {data.category}</p>
+                    {/* <p style={{ fontSize: '18px', fontWeight: '600', marginBottom: '10px' }}>Category: {data.category}</p> */}
                     <p style={{ fontSize: '18px', fontWeight: '600', marginBottom: '10px' }}>Subcategory: {data.subcategory}</p>
                     <p style={{ color: '#666', marginBottom: '15px' }}>Description: {data.description}</p>
                     <p style={{ fontSize: '18px', textDecoration: 'line-through', color: '#888' }}>Original Price: ₹{data.originalPrice}</p>

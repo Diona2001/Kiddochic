@@ -55,7 +55,7 @@ const Products = () => {
           paddingBottom: '10px',
         }}
       >
-        {category} {subcategory ? `- ${subcategory}` : ''}
+         {subcategory ? `- ${subcategory}` : ''}
       </h2>
 
       {products.length === 0 ? (
