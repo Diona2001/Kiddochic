@@ -9,6 +9,10 @@ import Products from '../components/Products';
 import SearchProduct from '../pages/SearchProduct';
 import ProductDetails from '../pages/ProductDetails';
 import Cart from '../components/Cart';
+import BecomeSeller from '../components/BecomeSeller';
+import SupplierRegistration from '../pages/SupplierRegistration';
+import SupplierDashboard from '../components/supplier/SupplierDashboard';
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -45,7 +49,19 @@ const router = createBrowserRouter([
             {
                 path: "cart",
                 element: <Cart /> // Route for CartPage
-              }
+              },
+            {
+                path: "become-seller",
+                element: <BecomeSeller />,
+            },
+            {
+                path: '/supplier/register',
+                element: <SupplierRegistration />
+            },
+            {
+                path: '/supplier/dashboard',
+                element: <SupplierDashboard />
+            },
         ]
     }
 ])

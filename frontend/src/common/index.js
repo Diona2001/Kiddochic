@@ -1,5 +1,4 @@
-
-const backendDomain = "https://kiddochic-backend.onrender.com";
+const backendDomain = "http://localhost:8080";
 
 const SummaryApi = {
   signUp: {
@@ -79,8 +78,22 @@ const SummaryApi = {
     url: `${backendDomain}/api/cart/updateQuantity/${productId}`,
     method: "PUT",
   }),
+  supplierRegister: {
+    url: `${backendDomain}/api/suppliers/register`,
+    method: "post"
+  },
+  getAllSuppliers: {
+    url: `${backendDomain}/api/suppliers`,
+    method: "get"
+  },
+  getSupplierById: (id) => ({
+    url: `${backendDomain}/api/suppliers/${id}`,
+    method: "get"
+  }),
+  updateSupplierStatus: (id) => ({
+    url: `${backendDomain}/api/suppliers/${id}/status`,
+    method: "put"
+  })
 };
-
-
 
 export default SummaryApi;

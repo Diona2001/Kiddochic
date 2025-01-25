@@ -7,6 +7,7 @@ const router = require('./routes')
 const categoryRoutes = require('./routes/categoryRoutes'); // Ensure the correct path
 const productRoutes = require('./routes/productRoutes'); // Adjust path if needed
 const cartRoutes = require('./routes/cartRoutes');
+const supplierRoutes = require('./routes/supplierRoutes');
 
 const app = express()
 // Define the frontend origin
@@ -24,13 +25,19 @@ app.use("/api",router);
 app.use("/api/categories", categoryRoutes); // Mount the categories routes
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
-
-
+app.use('/api/suppliers', supplierRoutes);
 
 connectDB().then(()=>{
     app.listen(PORT,()=>{
       console.log("Connected to DB");
       console.log(`Server is running on port ${PORT}`);
+    }).on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        console.log(`Port ${PORT} is busy. Trying ${PORT + 1}...`);
+        app.listen(PORT + 1);
+      } else {
+        console.error('Server error:', err);
+      }
     })
 
 })

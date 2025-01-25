@@ -7,6 +7,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context'; // Updated import
 import { ShoppingCartProvider } from './components/ShoppingCartContext';
+
+
 function App() {
   return (
     <AuthProvider>
