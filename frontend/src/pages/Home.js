@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import kidsImage from '../assets/kids.jpg'; // Import the image
+import WhatsAppButton from '../components/WhatsAppButton';
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
@@ -169,6 +170,9 @@ const Home = () => {
           ))}
         </div>
       </section>
+
+      {/* Add WhatsApp Button */}
+      <WhatsAppButton />
     </div>
   );
 };

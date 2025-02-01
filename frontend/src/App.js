@@ -7,6 +7,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './context'; // Updated import
 import { ShoppingCartProvider } from './components/ShoppingCartContext';
+import React from 'react';
+import Chatbot from './components/Chatbot';
 
 
 function App() {
@@ -18,6 +20,7 @@ function App() {
       <main className='min-h-[calc(100vh-120px)]'>
         <Outlet />
       </main>
+      <Chatbot />
       <Footer />
       </ShoppingCartProvider>
     </AuthProvider>

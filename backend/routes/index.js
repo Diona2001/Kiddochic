@@ -14,6 +14,7 @@ const { getProductDetails } = require('../controller/getProductDetails')
 const filterProductController = require('../controller/filterProduct')
 // const { addToCartController } = require('../controller/addToCartController')
 const cartRoutes = require('./cartRoutes');
+const { handleChat } = require('../controllers/chatcontroller');
 
 router.post("/signup",userSignUpController)
 router.post("/signin",userSignInController)
@@ -25,6 +26,7 @@ router.get("/search",SearchProduct)
 router.post("products/${productId}",getProductDetails)
 router.post("/filter",filterProductController)
 router.use('/cart', cartRoutes); 
+router.post("/chat", handleChat);
 
 // router.post("/addtocart",authToken,addToCartController)
 

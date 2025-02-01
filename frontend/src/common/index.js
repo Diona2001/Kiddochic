@@ -75,24 +75,24 @@ const SummaryApi = {
     method: "DELETE",
   }),
   updateCartQuantity: (productId) => ({
-    url: `${backendDomain}/api/cart/updateQuantity/${productId}`,
+    url: `${backendDomain}/api/cart/updateCartItemQuantity/${productId}`,
     method: "PUT",
   }),
   supplierRegister: {
     url: `${backendDomain}/api/suppliers/register`,
-    method: "post"
+    method: "POST"
   },
   getAllSuppliers: {
     url: `${backendDomain}/api/suppliers`,
-    method: "get"
+    method: "GET"
   },
-  getSupplierById: (id) => ({
+  getSupplierDetails: (id) => ({
     url: `${backendDomain}/api/suppliers/${id}`,
-    method: "get"
+    method: "GET"
   }),
   updateSupplierStatus: (id) => ({
     url: `${backendDomain}/api/suppliers/${id}/status`,
-    method: "put"
+    method: "PUT"
   })
 };
 

@@ -27,6 +27,21 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/suppliers', supplierRoutes);
 
+// Simple chatbot endpoint
+app.post('/api/chat', (req, res) => {
+  const userMessage = req.body.message;
+
+  // Simple logic for chatbot response
+  let botReply = 'I am not sure how to respond to that.';
+  if (userMessage.toLowerCase().includes('hello')) {
+    botReply = 'Hello! How can I assist you today?';
+  } else if (userMessage.toLowerCase().includes('help')) {
+    botReply = 'Sure! What do you need help with?';
+  }
+
+  res.json({ reply: botReply });
+});
+
 connectDB().then(()=>{
     app.listen(PORT,()=>{
       console.log("Connected to DB");
