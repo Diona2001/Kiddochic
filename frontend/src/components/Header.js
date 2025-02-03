@@ -22,8 +22,7 @@ const Header = () => {
     '1-6 years',
     'Baby Essentials',
     'Toy and Gaming',
-    'FootWear',
-    'Accessories',
+    'Footwear',
   ];
 
   const categoryMenus = {
@@ -261,10 +260,10 @@ const Header = () => {
                   </Link>
 
                   <Link 
-                    to="/community" 
+                    to="/charity" 
                     className='whitespace-nowrap px-4 py-1.5 border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white rounded-full font-medium transition-all duration-200'
                   >
-                    Community
+                    Charity
                   </Link>
                 </>
               ) : (

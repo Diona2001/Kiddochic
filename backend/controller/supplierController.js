@@ -144,4 +144,32 @@ exports.getAllSuppliers = async (req, res) => {
       error: error.message
     });
   }
+};
+
+// Add this new function to check supplier by mobile number
+exports.checkSupplier = async (req, res) => {
+  try {
+    const { phone } = req.params;
+    
+    // Check if supplier exists with the given mobile number
+    const supplier = await Supplier.findOne({ mobile: phone });
+    
+    if (supplier) {
+      return res.status(200).json({
+        exists: true,
+        businessName: supplier.businessName
+      });
+    } 
+
+    return res.status(200).json({
+      exists: false
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Error checking supplier status',
+      error: error.message
+    });
+  }
 }; 

@@ -8,6 +8,7 @@ const categoryRoutes = require('./routes/categoryRoutes'); // Ensure the correct
 const productRoutes = require('./routes/productRoutes'); // Adjust path if needed
 const cartRoutes = require('./routes/cartRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
+const charityRoutes = require('./routes/charityRoutes');
 
 const app = express()
 // Define the frontend origin
@@ -26,6 +27,7 @@ app.use("/api/categories", categoryRoutes); // Mount the categories routes
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/suppliers', supplierRoutes);
+app.use('/api/charity', charityRoutes);
 
 // Simple chatbot endpoint
 app.post('/api/chat', (req, res) => {

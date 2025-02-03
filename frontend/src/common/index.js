@@ -93,7 +93,31 @@ const SummaryApi = {
   updateSupplierStatus: (id) => ({
     url: `${backendDomain}/api/suppliers/${id}/status`,
     method: "PUT"
-  })
+  }),
+  checkSupplier: {
+    url: `${backendDomain}/api/suppliers/check`,
+    method: "GET"
+  },
+  addCharity: {
+    url: `${backendDomain}/api/charity`,
+    method: "POST"
+  },
+  getAllCharities: {
+    url: `${backendDomain}/api/charity`,
+    method: "GET"
+  },
+  updateCharity: (id) => ({
+    url: `${backendDomain}/api/charity/${id}`,
+    method: "PUT"
+  }),
+  deleteCharity: (id) => ({
+    url: `${backendDomain}/api/charity/${id}`,
+    method: "DELETE"
+  }),
+  searchCharities: {
+    url: `${backendDomain}/api/charity/search`,
+    method: "GET"
+  }
 };
 
 export default SummaryApi;

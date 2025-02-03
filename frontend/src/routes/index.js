@@ -12,6 +12,7 @@ import Cart from '../components/Cart';
 import BecomeSeller from '../components/BecomeSeller';
 import SupplierRegistration from '../pages/SupplierRegistration';
 import SupplierDashboard from '../components/supplier/SupplierDashboard';
+import CharityPage from '../pages/CharityPage';
 
 const router = createBrowserRouter([
     {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
             {
                 path: '/supplier/dashboard',
                 element: <SupplierDashboard />
+            },
+            {
+                path: "charity",
+                element: <CharityPage />
             },
         ]
     }

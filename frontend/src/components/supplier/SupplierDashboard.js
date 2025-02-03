@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import SummaryApi from '../../common/index';
+import { useNavigate } from 'react-router-dom';
 
 const SupplierDashboard = () => {
+  const navigate = useNavigate();
   const [productData, setProductData] = useState({
     name: '',
     description: '',
@@ -72,12 +74,34 @@ const SupplierDashboard = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(SummaryApi.logout_user.url, {
+        method: SummaryApi.logout_user.method,
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('businessName');
+        toast.success('Logged out successfully');
+        navigate('/become-seller');
+      } else {
+        toast.error('Logout failed');
+      }
+    } catch (error) {
+      toast.error('Error during logout');
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Hi, {localStorage.getItem('businessName')}</h1>
         <button
-          onClick={() => {/* Add logout logic */}}
+          onClick={handleLogout}
           className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         >
           Logout

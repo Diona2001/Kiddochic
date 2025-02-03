@@ -13,7 +13,7 @@ const handleChat = async (req, res) => {
 
         // Initial greeting
         if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-            response = "Hey there 👋\nWelcome to KidsStyle Haven! How can I help you today?";
+            response = "Hey there 👋\nWelcome to KiddoChic! How can I help you today?";
         } 
         // About products and collections
         else if (lowerMessage.includes('product') || lowerMessage.includes('clothes') || lowerMessage.includes('collection')) {

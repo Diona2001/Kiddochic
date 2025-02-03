@@ -1,28 +1,54 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import SummaryApi from '../common';
 // If you don't have the seller image yet, you can comment this line out temporarily
 // import sellerImage from '../assets/seller-image.png';
 
 const BecomeSeller = () => {
   const navigate = useNavigate();
   const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate phone number
     if (!phone || phone.length !== 10) {
       toast.error('Please enter a valid 10-digit phone number');
       return;
     }
     
+    setLoading(true);
     try {
-      // Store the phone number in localStorage or state management if needed
-      localStorage.setItem('sellerPhone', phone);
-      // Navigate to supplier registration form
-      navigate('/supplier/register');
+      // Make API call to check supplier
+      const response = await fetch(`${SummaryApi.checkSupplier.url}/${phone}`, {
+        method: SummaryApi.checkSupplier.method,
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const data = await response.json();
+      console.log('Response:', data);
+
+      if (data.exists) {
+        // Supplier exists - store info and redirect to dashboard
+        localStorage.setItem('sellerPhone', phone);
+        localStorage.setItem('businessName', data.businessName);
+        toast.success('Welcome back! Redirecting to dashboard...');
+        navigate('/supplier/dashboard');
+      } else {
+        // New supplier - store phone and redirect to registration
+        localStorage.setItem('sellerPhone', phone);
+        toast.info('Please complete your registration');
+        navigate('/supplier/register');
+      }
     } catch (error) {
-      toast.error('Something went wrong');
-      console.error(error);
+      console.error('Error:', error);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,7 +80,7 @@ const BecomeSeller = () => {
               </p>
             </div>
 
-            {/* Sign Up Form */}
+            {/* Phone Number Input Form */}
             <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
               <div className="flex">
                 <div className="bg-gray-100 px-3 py-2 rounded-l-lg flex items-center">
@@ -72,9 +98,12 @@ const BecomeSeller = () => {
               </div>
               <button
                 type="submit"
-                className="w-full bg-pink-500 text-white py-3 rounded-lg font-medium hover:bg-pink-600 transition-colors duration-200"
+                disabled={loading}
+                className={`w-full bg-pink-500 text-white py-3 rounded-lg font-medium 
+                  ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-pink-600'} 
+                  transition-colors duration-200`}
               >
-                Start Selling
+                {loading ? 'Please wait...' : 'Start Selling'}
               </button>
             </form>
           </div>
