@@ -36,16 +36,9 @@ const charitySchema = new mongoose.Schema({
             message: 'Gender must be either: boy, girl, or unisex'
         }
     },
-    imageUrl: {
+    image: {
         type: String,
-        required: [true, 'Please provide an image of the items'],
-        validate: {
-            validator: function(v) {
-                // Basic URL validation
-                return /^(http|https):\/\/[^ "]+$/.test(v);
-            },
-            message: props => `${props.value} is not a valid URL!`
-        }
+        required: [true, 'Please provide an image of the items']
     },
     status: {
         type: String,

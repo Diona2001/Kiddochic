@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import SummaryApi from '../common'; // Import SummaryApi
+import { Link } from 'react-router-dom';
 
 const CharityPage = () => {
   const [charities, setCharities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingCharity, setEditingCharity] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     quality: 'normal',
     ageGroup: 'newborn',
-    gender: '',
-    imageUrl: '',
+    gender: 'unisex',
     status: 'available'
   });
 
@@ -40,48 +41,52 @@ const CharityPage = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    const { name, type, files, value } = e.target;
+    if (type === 'file') {
+      setSelectedImage(files[0]);
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form data before submission
-    if (!formData.name || !formData.description || !formData.imageUrl || !formData.gender) {
+    if (!formData.name || !formData.description || !formData.gender) {
       toast.error('Please fill in all required fields');
       return;
     }
 
-    // Validate description length
     if (formData.description.length < 10) {
       toast.error('Description should be at least 10 characters long');
       return;
     }
 
-    // Validate image URL
-    const urlPattern = /^(http|https):\/\/[^ "]+$/;
-    if (!urlPattern.test(formData.imageUrl)) {
-      toast.error('Please enter a valid image URL');
+    if (!selectedImage && !editingCharity) {
+      toast.error('Please select an image');
       return;
+    }
+
+    const formDataToSend = new FormData();
+    Object.keys(formData).forEach(key => {
+      formDataToSend.append(key, formData[key]);
+    });
+    
+    if (selectedImage) {
+      formDataToSend.append('image', selectedImage);
     }
 
     try {
       const config = editingCharity 
         ? SummaryApi.updateCharity(editingCharity._id)
         : SummaryApi.addCharity;
-      
-      console.log('Submitting data:', formData); // Debug log
 
       const response = await fetch(config.url, {
         method: config.method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
 
       const data = await response.json();
@@ -94,7 +99,7 @@ const CharityPage = () => {
         toast.error(data.message || 'Error saving charity item');
       }
     } catch (error) {
-      console.error('Error:', error); // Debug log
+      console.error('Error:', error);
       toast.error('Error saving charity item');
     }
   };
@@ -129,9 +134,9 @@ const CharityPage = () => {
       quality: charity.quality,
       ageGroup: charity.ageGroup,
       gender: charity.gender,
-      imageUrl: charity.imageUrl,
       status: charity.status
     });
+    setSelectedImage(null);
     setShowAddForm(true);
   };
 
@@ -142,9 +147,9 @@ const CharityPage = () => {
       quality: 'normal',
       ageGroup: 'newborn',
       gender: 'unisex',
-      imageUrl: '',
       status: 'available'
     });
+    setSelectedImage(null);
     setEditingCharity(null);
     setShowAddForm(false);
   };
@@ -154,12 +159,14 @@ const CharityPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Charity Donations</h1>
+        <h1 className="text-4xl font-bold text-gray-800 tracking-tight">
+          Charity Donations
+        </h1>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-md"
         >
           {showAddForm ? 'Cancel' : 'Add New Charity'}
         </button>
@@ -167,31 +174,30 @@ const CharityPage = () => {
 
       {/* Add/Edit Form */}
       {showAddForm && (
-        <form onSubmit={handleSubmit} className="mb-8 p-4 bg-gray-50 rounded-lg">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="mb-8 p-6 bg-white rounded-xl shadow-lg transition-all duration-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              placeholder="Donor Name"
-              className="p-2 border rounded"
+              placeholder="Product Name"
+              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               required
             />
             <input
-              type="url"
-              name="imageUrl"
-              value={formData.imageUrl}
+              type="file"
+              name="image"
               onChange={handleInputChange}
-              placeholder="Image URL (https://...)"
-              className="p-2 border rounded"
-              required
+              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              accept="image/*"
+              required={!editingCharity}
             />
             <select
               name="quality"
               value={formData.quality}
               onChange={handleInputChange}
-              className="p-2 border rounded"
+              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               required
             >
               <option value="poor">Poor</option>
@@ -202,7 +208,7 @@ const CharityPage = () => {
               name="ageGroup"
               value={formData.ageGroup}
               onChange={handleInputChange}
-              className="p-2 border rounded"
+              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               required
             >
               <option value="newborn">Newborn</option>
@@ -213,7 +219,7 @@ const CharityPage = () => {
               name="gender"
               value={formData.gender}
               onChange={handleInputChange}
-              className="p-2 border rounded"
+              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
               required
             >
               <option value="boy">Boy</option>
@@ -225,7 +231,7 @@ const CharityPage = () => {
               value={formData.description}
               onChange={handleInputChange}
               placeholder="Description (minimum 10 characters)"
-              className="p-2 border rounded md:col-span-2"
+              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none md:col-span-2"
               required
               minLength="10"
               rows="3"
@@ -233,7 +239,7 @@ const CharityPage = () => {
           </div>
           <button
             type="submit"
-            className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            className="mt-6 bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transform hover:scale-105 transition-all duration-200 shadow-md"
           >
             {editingCharity ? 'Update Charity' : 'Add Charity'}
           </button>
@@ -241,51 +247,63 @@ const CharityPage = () => {
       )}
 
       {/* Charity Items Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {charities.map((charity) => (
-          <div key={charity._id} className="border rounded-lg overflow-hidden shadow-lg">
-            <div className="relative">
+          <div key={charity._id} className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100">
+            <Link to={`/charity/${charity._id}`} className="relative aspect-[4/3] overflow-hidden block">
               <img 
-                src={charity.imageUrl} 
+                src={`http://localhost:8080/uploads/${charity.image}`}
                 alt={charity.name} 
-                className="w-full h-48 object-cover"
+                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
+                }}
               />
-              <span className={`absolute top-2 right-2 px-3 py-1 rounded-full text-sm ${
-                charity.status === 'available' ? 'bg-green-500 text-white' :
-                charity.status === 'reserved' ? 'bg-yellow-500 text-white' :
+              <span className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold shadow-lg ${
+                charity.status === 'available' ? 'bg-emerald-500 text-white' :
+                charity.status === 'reserved' ? 'bg-amber-500 text-white' :
                 'bg-gray-500 text-white'
               }`}>
                 {charity.status}
               </span>
-            </div>
-            <div className="p-4">
-              <h3 className="text-xl font-semibold mb-2">{charity.name}</h3>
-              <p className="text-gray-600 mb-2">{charity.description}</p>
+            </Link>
+            
+            <div className="p-5">
+              <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-1 hover:line-clamp-none">
+                {charity.name}
+              </h3>
+              
+              <p className="text-gray-600 text-sm mb-4 line-clamp-2 hover:line-clamp-none">
+                {charity.description}
+              </p>
+              
               <div className="flex flex-wrap gap-2 mb-4">
-                <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                <span className="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
                   {charity.ageGroup}
                 </span>
-                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                <span className="px-2.5 py-1 bg-green-50 text-green-700 rounded-full text-xs font-medium">
                   {charity.quality}
                 </span>
-                <span className={`px-2 py-1 rounded-full text-sm ${
-                  charity.gender === 'boy' ? 'bg-blue-100 text-blue-800' :
-                  charity.gender === 'girl' ? 'bg-pink-100 text-pink-800' :
-                  'bg-purple-100 text-purple-800'
+                <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                  charity.gender === 'boy' ? 'bg-blue-50 text-blue-700' :
+                  charity.gender === 'girl' ? 'bg-pink-50 text-pink-700' :
+                  'bg-purple-50 text-purple-700'
                 }`}>
                   {charity.gender}
                 </span>
               </div>
+              
               <div className="flex gap-2">
                 <button 
                   onClick={() => handleEdit(charity)}
-                  className="flex-1 bg-yellow-500 text-white py-2 rounded hover:bg-yellow-600"
+                  className="flex-1 bg-amber-500 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-amber-600 transition-colors duration-200 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
                 >
                   Edit
                 </button>
                 <button 
                   onClick={() => handleDelete(charity._id)}
-                  className="flex-1 bg-red-500 text-white py-2 rounded hover:bg-red-600"
+                  className="flex-1 bg-red-500 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors duration-200 focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 >
                   Delete
                 </button>
@@ -296,8 +314,8 @@ const CharityPage = () => {
       </div>
 
       {charities.length === 0 && (
-        <div className="text-center text-gray-500 mt-8">
-          No charity items found. Add some items to get started!
+        <div className="text-center text-gray-500 mt-12">
+          <p className="text-xl">No charity items found. Add some items to get started!</p>
         </div>
       )}
     </div>

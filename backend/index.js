@@ -19,6 +19,7 @@ app.use(cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+    exposedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(cookieParser());
@@ -28,6 +29,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/charity', charityRoutes);
+app.use('/uploads', express.static('uploads'));
 
 // Simple chatbot endpoint
 app.post('/api/chat', (req, res) => {

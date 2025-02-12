@@ -13,6 +13,9 @@ import BecomeSeller from '../components/BecomeSeller';
 import SupplierRegistration from '../pages/SupplierRegistration';
 import SupplierDashboard from '../components/supplier/SupplierDashboard';
 import CharityPage from '../pages/CharityPage';
+import CharityDetailPage from '../pages/CharityDetailPage';
+import CharityShippingPage from '../pages/CharityShippingPage';
+import CharityConfirmationPage from '../pages/CharityConfirmationPage';
 
 const router = createBrowserRouter([
     {
@@ -67,6 +70,18 @@ const router = createBrowserRouter([
                 path: "charity",
                 element: <CharityPage />
             },
+            {
+                path: "charity/:id",
+                element: <CharityDetailPage />
+            },
+            {
+                path: "charity/:id/shipping",
+                element: <CharityShippingPage />
+            },
+            {
+                path: "charity/confirmation",
+                element: <CharityConfirmationPage />
+            }
         ]
     }
 ])

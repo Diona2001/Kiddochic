@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../middleware/uploadMiddleware');
 const {
     addCharity,
     getAllCharities,
@@ -16,8 +17,8 @@ router.get('/', getAllCharities);
 router.get('/:id', getCharityById);
 
 // Create, Update, Delete routes
-router.post('/', addCharity);
-router.put('/:id', updateCharity);
+router.post('/', upload.single('image'), addCharity);
+router.put('/:id', upload.single('image'), updateCharity);
 router.patch('/:id/status', updateCharityStatus);
 router.delete('/:id', deleteCharity);
 

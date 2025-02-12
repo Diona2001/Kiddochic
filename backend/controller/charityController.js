@@ -1,12 +1,34 @@
 const Charity = require('../models/charityModel');
+const fs = require('fs').promises;
+const path = require('path');
+const multer = require('multer');
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, 'uploads/');
+        },
+        filename: function (req, file, cb) {
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            cb(null, uniqueSuffix + path.extname(file.originalname));
+        }
+    }),
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Not an image! Please upload an image.'), false);
+        }
+    }
+});
 
 // Add a new charity donation
 exports.addCharity = async (req, res) => {
     try {
-        const { name, description, quality, ageGroup, gender, imageUrl } = req.body;
+        const { name, description, quality, ageGroup, gender } = req.body;
 
         // Validate required fields
-        if (!name || !description || !quality || !ageGroup || !gender || !imageUrl) {
+        if (!name || !description || !quality || !ageGroup || !gender) {
             return res.status(400).json({
                 success: false,
                 message: 'All fields are required',
@@ -14,23 +36,23 @@ exports.addCharity = async (req, res) => {
             });
         }
 
-        // Validate gender value
-        if (!['boy', 'girl', 'unisex'].includes(gender)) {
+        // Check if file was uploaded
+        if (!req.file) {
             return res.status(400).json({
                 success: false,
-                message: 'Invalid gender value',
+                message: 'Please upload an image',
                 error: true
             });
         }
 
-        // Create new charity donation
+        // Create new charity donation with file path
         const charity = new Charity({
             name,
             description,
             quality,
             ageGroup,
             gender,
-            imageUrl
+            image: req.file.filename // Store the filename
         });
 
         await charity.save();
@@ -43,6 +65,11 @@ exports.addCharity = async (req, res) => {
         });
 
     } catch (error) {
+        // Delete uploaded file if there's an error
+        if (req.file) {
+            await fs.unlink(path.join('uploads', req.file.filename));
+        }
+
         res.status(500).json({
             success: false,
             message: 'Error adding charity donation',
@@ -106,30 +133,33 @@ exports.getCharityById = async (req, res) => {
 // Update charity donation
 exports.updateCharity = async (req, res) => {
     try {
-        const { name, description, quality, ageGroup, gender, imageUrl, status } = req.body;
-        
-        // Validate gender if provided
-        if (gender && !['boy', 'girl', 'unisex'].includes(gender)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid gender value',
-                error: true
-            });
+        const { name, description, quality, ageGroup, gender, status } = req.body;
+        const updateData = { name, description, quality, ageGroup, gender, status };
+
+        // If new file is uploaded, add it to update data
+        if (req.file) {
+            updateData.image = req.file.filename;
         }
 
-        const updatedCharity = await Charity.findByIdAndUpdate(
-            req.params.id,
-            { name, description, quality, ageGroup, gender, imageUrl, status },
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedCharity) {
+        const charity = await Charity.findById(req.params.id);
+        if (!charity) {
             return res.status(404).json({
                 success: false,
                 message: 'Charity donation not found',
                 error: true
             });
         }
+
+        // Delete old image if new one is uploaded
+        if (req.file && charity.image) {
+            await fs.unlink(path.join('uploads', charity.image));
+        }
+
+        const updatedCharity = await Charity.findByIdAndUpdate(
+            req.params.id,
+            updateData,
+            { new: true, runValidators: true }
+        );
 
         res.status(200).json({
             success: true,
@@ -139,6 +169,11 @@ exports.updateCharity = async (req, res) => {
         });
 
     } catch (error) {
+        // Delete uploaded file if there's an error
+        if (req.file) {
+            await fs.unlink(path.join('uploads', req.file.filename));
+        }
+
         res.status(500).json({
             success: false,
             message: 'Error updating charity donation',
@@ -151,7 +186,7 @@ exports.updateCharity = async (req, res) => {
 // Delete charity donation
 exports.deleteCharity = async (req, res) => {
     try {
-        const charity = await Charity.findByIdAndDelete(req.params.id);
+        const charity = await Charity.findById(req.params.id);
 
         if (!charity) {
             return res.status(404).json({
@@ -160,6 +195,13 @@ exports.deleteCharity = async (req, res) => {
                 error: true
             });
         }
+
+        // Delete associated image file
+        if (charity.image) {
+            await fs.unlink(path.join('uploads', charity.image));
+        }
+
+        await charity.deleteOne();
 
         res.status(200).json({
             success: true,
