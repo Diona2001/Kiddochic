@@ -16,6 +16,12 @@ import CharityPage from '../pages/CharityPage';
 import CharityDetailPage from '../pages/CharityDetailPage';
 import CharityShippingPage from '../pages/CharityShippingPage';
 import CharityConfirmationPage from '../pages/CharityConfirmationPage';
+import MaternityKitCustomization from '../pages/MaternityKitCustomization';
+import MaternityLanding from '../pages/MaternityLanding';
+import NewbornKitCustomization from '../pages/NewbornKitCustomization';
+import HospitalBagCustomization from '../pages/HospitalBagCustomization';
+import ShippingPage from '../pages/ShippingPage';
+import Moments from '../pages/Moments';
 
 const router = createBrowserRouter([
     {
@@ -81,7 +87,31 @@ const router = createBrowserRouter([
             {
                 path: "charity/confirmation",
                 element: <CharityConfirmationPage />
-            }
+            },
+            {
+                path: "maternity-kit-customization",
+                element: <MaternityKitCustomization />
+            },
+            {
+                path: "maternity",
+                element: <MaternityLanding />
+            },
+            {
+                path: "newborn-kit-customization",
+                element: <NewbornKitCustomization />
+            },
+            {
+                path: "hospital-bag-customization",
+                element: <HospitalBagCustomization />
+            },
+            {
+                path: "shipping",
+                element: <ShippingPage />
+            },
+            {
+                path: "moments",
+                element: <Moments />
+            },
         ]
     }
 ])

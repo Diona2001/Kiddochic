@@ -117,7 +117,45 @@ const SummaryApi = {
   searchCharities: {
     url: `${backendDomain}/api/charity/search`,
     method: "GET"
-  }
+  },
+  // Maternity Kit endpoints
+  addMaternityKit: {
+    url: `${backendDomain}/api/maternity-kits`,
+    method: "post"
+  },
+  getAllMaternityKits: {
+    url: `${backendDomain}/api/maternity-kits`,
+    method: "get"
+  },
+  getMaternityKitById: (id) => ({
+    url: `${backendDomain}/api/maternity-kits/${id}`,
+    method: "get"
+  }),
+  updateMaternityKit: (id) => ({
+    url: `${backendDomain}/api/maternity-kits/${id}`,
+    method: "put"
+  }),
+  deleteMaternityKit: (id) => ({
+    url: `${backendDomain}/api/maternity-kits/${id}`,
+    method: "delete"
+  }),
+  // Add these new Moments endpoints
+  uploadMoment: {
+    url: `${backendDomain}/api/moments/upload`,
+    method: "post"
+  },
+  getAllMoments: {
+    url: `${backendDomain}/api/moments`,
+    method: "get"
+  },
+  likeMoment: (momentId) => ({
+    url: `${backendDomain}/api/moments/${momentId}/like`,
+    method: "post"
+  }),
+  deleteMoment: (momentId) => ({
+    url: `${backendDomain}/api/moments/${momentId}`,
+    method: "delete"
+  }),
 };
 
 export default SummaryApi;

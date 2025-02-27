@@ -1,4 +1,4 @@
-const  express = require('express')
+const express = require('express')
 const cors = require ('cors')
 const cookieParser = require('cookie-parser')
 require('dotenv').config()
@@ -9,6 +9,8 @@ const productRoutes = require('./routes/productRoutes'); // Adjust path if neede
 const cartRoutes = require('./routes/cartRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
 const charityRoutes = require('./routes/charityRoutes');
+const maternityKitRoutes = require('./routes/maternityKitRoutes');
+const momentRoutes = require('./routes/momentRoutes');
 
 const app = express()
 // Define the frontend origin
@@ -29,7 +31,9 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/charity', charityRoutes);
+app.use('/api/maternity-kits', maternityKitRoutes);
 app.use('/uploads', express.static('uploads'));
+app.use('/api/moments', momentRoutes);
 
 // Simple chatbot endpoint
 app.post('/api/chat', (req, res) => {

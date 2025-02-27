@@ -15,185 +15,28 @@ const Header = () => {
   const [showUserInfo, setShowUserInfo] = useState(false); // Add this line
   const [activeCategory, setActiveCategory] = useState(null);
 
-  // Add categories array
+  // Update categories array to include Maternity Wear and Moments
   const categories = [
-    '0-9 months',
-    '3-24 months',
-    '1-6 years',
-    'Baby Essentials',
-    'Toy and Gaming',
-    'Footwear',
+    'Maternity Wear',
+    'Moments'
   ];
 
+  // Update categoryMenus if needed
   const categoryMenus = {
-    '0-9 months': {
-      'Shop by Month': [
-        'TINY BABY',
-        '0-1 MONTHS',
-        '1-3 MONTHS',
-        '3-6 MONTHS',
-        '6-9 MONTHS'
-      ],
-      'Shop by gender': [
-        'Boys',
-        'Girls',
-        'Unisex'
-      ],
-      'Shop by type': [
-        'JHABLAS',
-        'BODY SUITS',
-        'SLEEP SUITS',
-        'ROMPERS',
-        'DRESSES',
-        'DRESS & BLOOMER SETS',
-        'BODYSUIT & SHORTS SETS',
-        'JHABALA & PANT SETS',
-        'SHIRT & PANT SETS',
-        'SHIRT & SHORTS SETS'
+    'Maternity Wear': {
+      'Maternity Essentials': [
+        {
+          name: 'EXPLORE MATERNITY',
+          path: '/maternity'
+        }
       ]
     },
-    '3-24 months': {
-      'Shop by Month': [
-        '3-6 MONTHS',
-        '6-9 MONTHS',
-        '9-12 MONTHS',
-        '12-18 MONTHS',
-        '18-24 MONTHS'
-      ],
-      'Shop by gender': [
-        'Boys',
-        'Girls',
-        'Unisex'
-      ],
-      'Shop by type': [
-        'JHABLAS',
-        'BODY SUITS',
-        'SLEEP SUITS',
-        'ROMPERS',
-        'DRESSES',
-        'DRESS & BLOOMER SETS',
-        'BODYSUIT & SHORTS SETS',
-        'JHABALA & PANT SETS',
-        'SHIRT & PANT SETS',
-        'SHIRT & SHORTS SETS'
-      ]
-    },
-    '1-6 years': {
-      'Shop by Age': [
-        '1-2 YEARS',
-        '2-3 YEARS',
-        '3-4 YEARS',
-        '4-5 YEARS',
-        '5-6 YEARS'
-      ],
-      'Shop by gender': [
-        'Boys',
-        'Girls',
-        'Unisex'
-      ],
-      'Shop by type': [
-        'JHABLAS',
-        'BODY SUITS',
-        'SLEEP SUITS',
-        'ROMPERS',
-        'DRESSES',
-        'DRESS & BLOOMER SETS',
-        'BODYSUIT & SHORTS SETS',
-        'JHABALA & PANT SETS',
-        'SHIRT & PANT SETS',
-        'SHIRT & SHORTS SETS'
-      ]
-    },
-    'Baby Essentials': {
-      'Baby Care': [
-        'BABY WIPES',
-        'COMBO PACKS',
-        'CLEANSERS & DETERGENTS',
-        'GIFTING',
-        'TRAINING',
-        'HEALTH & HYGIENE',
-        'BABY ORAL CARE',
-        'SOAPS , SHAMPOOS &BODY WASHES',
-        'LOTIONS , OILS &POWDERS',
-        'GARMENT ACCESSORIES'
-      ],
-      'Bedding & Feeding': [
-        'BEDDING',
-        'FEEDING'
-      ],
-      'Protection': [
-        'FACE MASKS',
-        'HAND GLOVES',
-        'KNEE PADS',
-        'MOSQUITO PROTECTION',
-        'SAFETY KITS'
-      ],
-      'Diapers': [
-        'BUTTON DIAPERS',
-        'CLOTH NAPPIES',
-        'DIAPER INSERTS',
-        'DIAPER PADS',
-        'DISPOSIBLE DIAPERS',
-        'NAPPIES',
-        'NAPPIES COMBOS',
-        'DIAPER BAGS'
-      ],
-      'Bath & Grooming': [
-        'BABY BATH TUBS',
-        'BABY BATHERS',
-        'BATH SEATS',
-        'BATH TOWELS',
-        'BATH TUBS',
-        'BRUSH & COMB SETS',
-        'COTTON BUDS',
-        'GROOMING KITS',
-        'MANICURE SETS',
-        'NAIL CUTTERS',
-        'POWDER PUFFS'
-      ]
-    },
-    'Toy and Gaming': {
-      'All Toys & Gaming': [
-        'BOARD GAMES',
-        'GIFTING',
-        'GUNS & WEAPONS',
-        'INDOOR & OUTDOOR PLAY EQUIPMENTS',
-        'FIGURES & COLLECTIBLES',
-        'PUSH AND PULL ALONG TOYS',
-        'FREE WHEELING VEHICLES',
-        'INFANT TOYS'
-      ],
-      'Educational & Creative': [
-        'LEARNING TOYS',
-        'PLAY GYMS & PLAY MATS',
-        'ART CRAFT & HOBBY KITS',
-        'BUBBLE TUBES',
-        'CARD GAMES',
-        'EASELS',
-        'FUN DOUGHS',
-        'GIFT SETS',
-        'MUSICAL TOYS',
-        'QUILLERS',
-        'STAMP ARTS',
-        'WINDOW ARTS'
-      ],
-      'Play Sets': [
-        'CHEF SETS',
-        'DOCTOR SETS',
-        'FISHING SETS',
-        'KITCHEN SETS',
-        'MAKE UP SETS'
-      ],
-      'Bath Toys': [
-        'BATH SETS',
-        'FLOATING TOYS',
-        'GIFT SETS'
-      ],
-      'Soft Toys': [
-        'ANIMAL MODELS',
-        'PILLOWS',
-        'PUPPETS',
-        'SOFT BALLS'
+    'Moments': {
+      'Moments Collection': [
+        {
+          name: 'EXPLORE MOMENTS',
+          path: '/moments'
+        }
       ]
     }
   };
@@ -341,35 +184,11 @@ const Header = () => {
                     onMouseLeave={() => setActiveCategory(null)}
                 >
                   <Link
-                    to={`/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                    to={category === 'Maternity Wear' ? '/maternity' : '/moments'}
                     className="text-gray-700 hover:text-red-600 transition-colors duration-200 flex items-center gap-1"
                   >
                     {category}
-                    <FaChevronDown className="text-xs" />
                   </Link>
-
-                  {/* Dropdown Menu */}
-                  {activeCategory === category && categoryMenus[category] && (
-                    <div className="absolute top-full left-0 bg-white shadow-lg rounded-b-lg p-4 z-50 w-[800px] grid grid-cols-3 gap-6">
-                      {Object.entries(categoryMenus[category]).map(([section, items]) => (
-                        <div key={section} className="space-y-3">
-                          <h3 className="font-semibold text-gray-900 border-b pb-2">{section}</h3>
-                          <ul className="space-y-2">
-                            {items.map((item) => (
-                              <li key={item}>
-                                <Link
-                                  to={`/category/${category.toLowerCase()}/${item.toLowerCase().replace(/\s+/g, '-')}`}
-                                  className="text-gray-600 hover:text-red-600 text-sm block"
-                                >
-                                  {item}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </li>
               ))}
             </ul>

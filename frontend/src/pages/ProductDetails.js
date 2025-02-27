@@ -169,19 +169,19 @@ const ProductDetails = () => {
         }
     };
 
-    const renderStars = (rating) => {
-        const stars = [];
-        const fullStars = Math.floor(rating);
-        const hasHalfStar = rating % 1 !== 0;
+    // const renderStars = (rating) => {
+    //     const stars = [];
+    //     const fullStars = Math.floor(rating);
+    //     const hasHalfStar = rating % 1 !== 0;
 
-        for (let i = 0; i < fullStars; i++) {
-            stars.push(<FaStar key={`star-${i}`} className="text-yellow-400" />);
-        }
-        if (hasHalfStar) {
-            stars.push(<FaStarHalfAlt key="half-star" className="text-yellow-400" />);
-        }
-        return stars;
-    };
+    //     for (let i = 0; i < fullStars; i++) {
+    //         stars.push(<FaStar key={`star-${i}`} className="text-yellow-400" />);
+    //     }
+    //     if (hasHalfStar) {
+    //         stars.push(<FaStarHalfAlt key="half-star" className="text-yellow-400" />);
+    //     }
+    //     return stars;
+    // };
 
     if (loading) return <div className="text-center text-xl">Loading...</div>;
     if (error) return <div className="text-red-500 text-center">{error}</div>;
@@ -219,14 +219,14 @@ const ProductDetails = () => {
                 <div className="md:col-span-4">
                     <h1 className="text-2xl font-medium mb-2">{data.name}</h1>
                     
-                    <div className="flex items-center mb-4">
+                    {/* <div className="flex items-center mb-4">
                         <div className="flex items-center">
                             {renderStars(3.4)}
                             <span className="ml-2 text-blue-500 hover:underline cursor-pointer">
                                 147 ratings
                             </span>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="border-t border-b py-4 my-4">
                         <div className="flex items-baseline mb-2">

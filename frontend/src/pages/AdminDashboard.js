@@ -1,17 +1,25 @@
 // src/pages/AdminDashboard.jsx
 import React, { useState } from 'react';
-import { FiBox, FiDollarSign, FiUsers, FiShoppingCart, FiTruck, FiClock, FiAlertCircle } from 'react-icons/fi';
+import { FiBox, FiDollarSign, FiUsers, FiShoppingCart, FiTruck, FiClock, FiAlertCircle, FiPackage } from 'react-icons/fi';
 import AddProduct from '../components/AddProduct';
 import ProductList from '../components/ProductList';
 import EditProduct from '../components/EditProduct';
+import AddMaternityKit from '../components/AddMaternityKit';
+import MaternityKitList from '../components/MaternityKitList';
 
 const AdminDashboard = () => {
   const [view, setView] = useState('dashboard');
   const [editProductId, setEditProductId] = useState(null);
+  const [editKitId, setEditKitId] = useState(null);
 
   const handleEdit = (productId) => {
     setEditProductId(productId);
     setView('edit');
+  };
+
+  const handleEditKit = (kitId) => {
+    setEditKitId(kitId);
+    setView('edit-kit');
   };
 
   return (
@@ -22,15 +30,26 @@ const AdminDashboard = () => {
           <h2 className="text-2xl font-bold text-gray-800">Admin Panel</h2>
         </div>
         <nav className="space-y-2">
-          {['dashboard', 'add', 'list', 'orders', 'users'].map((item) => (
+          {[
+            'dashboard',
+            'add',
+            'list',
+            'add-maternity-kit',
+            'maternity-kit-list',
+            'orders',
+            'users'
+          ].map((item) => (
             <button 
               key={item}
               onClick={() => setView(item)}
-              className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center ${
+              className={`w-full text-left px-4 py-3 rounded-lg transition-colors flex items-center space-x-2 ${
                 view === item ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-100'
               }`}
             >
-              {item.charAt(0).toUpperCase() + item.slice(1)}
+              {item === 'add-maternity-kit' && <FiPackage className="w-5 h-5" />}
+              <span>
+                {item.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+              </span>
             </button>
           ))}
         </nav>
@@ -171,6 +190,22 @@ const AdminDashboard = () => {
               Back to Product List
             </button>
             <EditProduct productId={editProductId} />
+          </div>
+        )}
+
+        {view === 'add-maternity-kit' && <AddMaternityKit />}
+        {view === 'maternity-kit-list' && <MaternityKitList onEdit={handleEditKit} />}
+        {view === 'edit-kit' && editKitId && (
+          <div>
+            <button
+              className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transform hover:scale-105 transition-all duration-200 shadow-md mb-6 font-medium"
+              onClick={() => setView('maternity-kit-list')}
+            >
+              Back to Kit List
+            </button>
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h2 className="text-2xl font-bold mb-6">Edit Kit #{editKitId}</h2>
+            </div>
           </div>
         )}
       </div>
