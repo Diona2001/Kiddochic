@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@google/generative-ai": "^0.22.0",
     "express-validator": "^7.2.1",
     "react-toastify": "^11.0.3"
   }

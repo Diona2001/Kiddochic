@@ -13,12 +13,15 @@ router.post('/addtocart', authToken, addToCartController.addToCart);
 router.delete('/remove/:productId', authToken,addToCartController.removeFromCart);
 
 // Update item quantity in cart
-router.put('/update/:productId',authToken, addToCartController.updateCartItemQuantity);
+router.put('/update/:productId', authToken, addToCartController.updateCartItemQuantity);
 
 // Get cart contents
 router.get('/', authToken,addToCartController.getCart);
 
 // Clear entire cart
 router.delete('/clear',addToCartController.clearCart);
+
+// Add new route for creating Razorpay order
+router.post('/create-order', authToken, addToCartController.createOrder);
 
 module.exports = router;

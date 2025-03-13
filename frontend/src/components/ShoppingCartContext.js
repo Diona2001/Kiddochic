@@ -1,24 +1,77 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
+import SummaryApi from '../common';
+import { toast } from 'react-toastify';
 
 export const ShoppingCartContext = createContext();
 
 export const ShoppingCartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  // Function to add an item to the cart and update cartItems state
-  const addToCart = (item) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find(i => i.productId === item.productId);
-      if (existingItem) {
-        // If item exists, update its quantity
-        return prevItems.map(i =>
-          i.productId === item.productId ? { ...i, quantity: i.quantity + item.quantity } : i
-        );
-      } else {
-        // If item does not exist, add it to the cart
-        return [...prevItems, { ...item, quantity: item.quantity }];
+  // Function to fetch cart items from the backend
+  const fetchCartItems = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const usertoken = localStorage.getItem("user");
+      
+      if (!token || !usertoken) {
+        setCartItems([]);
+        return;
       }
-    });
+
+      const user = JSON.parse(usertoken);
+      const { url, method } = SummaryApi.getCart;
+      
+      const response = await fetch(`${url}?userId=${user._id}`, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch cart');
+      }
+
+      const data = await response.json();
+      if (data.success && data.data) {
+        setCartItems(data.data.items || []);
+      }
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+      setCartItems([]);
+    }
+  };
+
+  // Fetch cart items when component mounts and when auth state changes
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+
+  const clearCart = async () => {
+    setCartItems([]); // Clear local state
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const { url, method } = SummaryApi.clearCart;
+      await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+    }
+  };
+
+  const addToCart = async (item) => {
+    try {
+      await fetchCartItems(); // Refresh cart items after adding
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
   };
 
   const buyNow = (item) => {
@@ -26,7 +79,13 @@ export const ShoppingCartProvider = ({ children }) => {
   };
 
   return (
-    <ShoppingCartContext.Provider value={{ cartItems, addToCart, buyNow }}>
+    <ShoppingCartContext.Provider value={{ 
+      cartItems, 
+      addToCart, 
+      buyNow,
+      clearCart,
+      refreshCart: fetchCartItems 
+    }}>
       {children}
     </ShoppingCartContext.Provider>
   );

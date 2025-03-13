@@ -75,7 +75,7 @@ const SummaryApi = {
     method: "DELETE",
   }),
   updateCartQuantity: (productId) => ({
-    url: `${backendDomain}/api/cart/updateCartItemQuantity/${productId}`,
+    url: `${backendDomain}/api/cart/update/${productId}`,
     method: "PUT",
   }),
   supplierRegister: {
@@ -156,6 +156,10 @@ const SummaryApi = {
     url: `${backendDomain}/api/moments/${momentId}`,
     method: "delete"
   }),
+  // createOrder: {
+  //   url: `${backendDomain}/api/cart/create-order`,
+  //   method: 'POST'
+  // },
 };
 
 export default SummaryApi;

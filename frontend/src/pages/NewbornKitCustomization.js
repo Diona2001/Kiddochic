@@ -11,7 +11,7 @@ const NewbornKitCustomization = () => {
     const [selectedMittensBooties, setSelectedMittensBooties] = useState(null);
     const [selectedBabyCap, setSelectedBabyCap] = useState(null);
 
-    const bodysuitOptions = [
+    const bodysuitOptions = [  
         {
             id: 'bs1',
             image: "https://m.media-amazon.com/images/I/61AxU9b4IKL._AC_UY1100_.jpg",
@@ -232,7 +232,7 @@ const NewbornKitCustomization = () => {
             totalPrice: totalPrice
         };
         console.log('Proceeding to checkout:', orderDetails);
-        navigate('/checkout', { state: { orderDetails } });
+        navigate('/shipping', { state: { orderDetails } });
     };
 
     const renderItemContent = (item) => {
@@ -267,6 +267,24 @@ const NewbornKitCustomization = () => {
                         <h3 className="font-medium text-gray-900">{item.name}</h3>
                         <p className="text-sm text-gray-500">{item.description}</p>
                         <p className="text-blue-600 font-medium">₹{item.price}</p>
+                        
+                        {/* Add quantity controls */}
+                        <div className="flex items-center mt-2 space-x-2">
+                            <button
+                                onClick={() => handleQuantityChange(item.id, (selectedItems[item.id] || 0) - 1)}
+                                disabled={(selectedItems[item.id] || 0) === 0}
+                                className="px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                            >
+                                -
+                            </button>
+                            <span className="w-8 text-center">{selectedItems[item.id] || 0}</span>
+                            <button
+                                onClick={() => handleQuantityChange(item.id, (selectedItems[item.id] || 0) + 1)}
+                                className="px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300"
+                            >
+                                +
+                            </button>
+                        </div>
                     </div>
                     <div className="grid grid-cols-4 gap-2 mb-4">
                         {options.map((option) => (
@@ -302,6 +320,24 @@ const NewbornKitCustomization = () => {
                 <h3 className="font-medium text-gray-900">{item.name}</h3>
                 <p className="text-sm text-gray-500">{item.description}</p>
                 <p className="text-blue-600 font-medium">₹{item.price}</p>
+                
+                {/* Add quantity controls */}
+                <div className="flex items-center mt-2 space-x-2">
+                    <button
+                        onClick={() => handleQuantityChange(item.id, (selectedItems[item.id] || 0) - 1)}
+                        disabled={(selectedItems[item.id] || 0) === 0}
+                        className="px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                    >
+                        -
+                    </button>
+                    <span className="w-8 text-center">{selectedItems[item.id] || 0}</span>
+                    <button
+                        onClick={() => handleQuantityChange(item.id, (selectedItems[item.id] || 0) + 1)}
+                        className="px-2 py-1 rounded-md bg-gray-200 hover:bg-gray-300"
+                    >
+                        +
+                    </button>
+                </div>
             </div>
         );
     };

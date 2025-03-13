@@ -112,8 +112,9 @@ const MaternityKitCustomization = () => {
             },
             totalPrice: totalPrice
         };
-        console.log('Proceeding to checkout:', orderDetails);
-        navigate('/checkout', { state: { orderDetails } });
+
+        // Navigate to shipping page with order details
+        navigate('/shipping', { state: { orderDetails } });
     };
 
     const handleNightwearSelect = (nightwearId) => {
